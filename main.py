@@ -15,15 +15,18 @@ import json
 # --- Firebase Initialization ---
 try:
     if os.path.exists("serviceAccountKey.json"):
-        # Local development
         cred = credentials.Certificate("serviceAccountKey.json")
     else:
-        # Production deployment
+        private_key = os.environ.get("FIREBASE_PRIVATE_KEY")
+        if private_key:
+            # Handle potential formatting issues
+            private_key = private_key.replace('\\n', '\n')
+            
         firebase_config = {
             "type": os.environ.get("FIREBASE_TYPE"),
             "project_id": os.environ.get("FIREBASE_PROJECT_ID"),
             "private_key_id": os.environ.get("FIREBASE_PRIVATE_KEY_ID"),
-            "private_key": os.environ.get("FIREBASE_PRIVATE_KEY").replace('\\n', '\n'),
+            "private_key": private_key,
             "client_email": os.environ.get("FIREBASE_CLIENT_EMAIL"),
             "client_id": os.environ.get("FIREBASE_CLIENT_ID"),
             "auth_uri": os.environ.get("FIREBASE_AUTH_URI"),
@@ -824,5 +827,6 @@ if __name__ == "__main__":
 
 # Export for Vercel
 app = app
+
 
 
