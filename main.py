@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 import pytz
 import os   
 import json
-
+from flask import send_from_directory
 
 # --- Firebase Initialization ---
 try:
@@ -48,7 +48,19 @@ CORS(app)
 @app.route("/")
 def index():
     return "Welcome to the Cholo Pay Backend!"
+@app.route('/index.html')
+def serve_index():
+    return send_from_directory('.', 'index.html')
 
+@app.route('/dashboard.html')
+def serve_dashboard():
+    return send_from_directory('.', 'dashboard.html')
+
+@app.route('/owner_dashboard.html')
+def serve_owner_dashboard():
+    return send_from_directory('.', 'owner_dashboard.html')
+
+# Optional: Update root route to serve index.html directly
 # --- USER REGISTRATION ---
 @app.route("/register/user", methods=['POST'])
 def register_user():
@@ -827,6 +839,7 @@ if __name__ == "__main__":
 
 # Export for Vercel
 app = app
+
 
 
 
