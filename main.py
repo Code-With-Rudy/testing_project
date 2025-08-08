@@ -821,3 +821,8 @@ def check_ticket_validity(ticket_id):
 # --- MAIN EXECUTION ---
 if __name__ == "__main__":
     app.run(debug=True)
+
+# Export for Vercel
+app = app
+
+
