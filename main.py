@@ -20,7 +20,11 @@ try:
         private_key = os.environ.get("FIREBASE_PRIVATE_KEY")
         if private_key:
             # Handle potential formatting issues
-            private_key = private_key.replace('\\n', '\n')
+            if'\\n' in private_key:
+                private_key = private_key.replace('\\n', '\n')
+            if private_key.startswith('"') and private_key.endswith('"'):
+                private_key = private_key[1:-1]
+                
             
         firebase_config = {
             "type": os.environ.get("FIREBASE_TYPE"),
@@ -839,6 +843,7 @@ if __name__ == "__main__":
 
 # Export for Vercel
 app = app
+
 
 
 
