@@ -8,10 +8,29 @@ from firebase_admin.firestore import firestore as firestore_client
 import uuid
 from datetime import datetime, timedelta, timezone
 import pytz
+import os   
+import json
+
 
 # --- Firebase Initialization ---
 try:
-    cred = credentials.Certificate("serviceAccountKey.json")
+    if os.path.exists("serviceAccountKey.json"):
+        # Local development
+        cred = credentials.Certificate("serviceAccountKey.json")
+    else:
+        # Production deployment
+        firebase_config = {
+            "type": os.environ.get("FIREBASE_TYPE"),
+            "project_id": os.environ.get("FIREBASE_PROJECT_ID"),
+            "private_key_id": os.environ.get("FIREBASE_PRIVATE_KEY_ID"),
+            "private_key": os.environ.get("FIREBASE_PRIVATE_KEY").replace('\\n', '\n'),
+            "client_email": os.environ.get("FIREBASE_CLIENT_EMAIL"),
+            "client_id": os.environ.get("FIREBASE_CLIENT_ID"),
+            "auth_uri": os.environ.get("FIREBASE_AUTH_URI"),
+            "token_uri": os.environ.get("FIREBASE_TOKEN_URI")
+        }
+        cred = credentials.Certificate(firebase_config)
+    
     if not firebase_admin._apps:
         firebase_admin.initialize_app(cred)
     db = firestore.client()
